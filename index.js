@@ -11,6 +11,7 @@ nunjucks.configure('views', {
 
 app.get('/minilistSs', route.minilistSs)
 app.get('/test', route.test)
+app.get('/auth', route.auth)
 
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!')

@@ -1,15 +1,34 @@
 const request = require('request')
 const cheerio = require('cheerio')
 const accessServices = require('../services/access')
+const cookieUtil = require('../utils/cookie')
+
+function cookieChecker(response) {
+  const headers = response.headers
+  if (headers && headers['set-cookie']) {
+    const newCookie = headers['set-cookie']
+    cookieUtil.setCookie(newCookie)
+    return false
+  } else {
+    return true
+  }
+}
 
 function test(req, res, next) {
-  const callback = function (err, httpResponse, body){
-    console.log(JSON.stringify(httpResponse, null, 2))
-    const bodyStr = body.toString()
-    console.log(bodyStr)
-    return res.render('index.html', { cookie: 123 })
+  const callback = function (err, response, body) {
+    if (cookieChecker(response)) {
+      return res.render('index.html', { cookie: cookieUtil.getCookie() })
+    } else {
+      res.redirect('/auth')
+    }
+
   }
+
   accessServices.login(callback)
+}
+
+function auth(req, res, next) {
+  return res.render('index.html', { cookie: 'auth' })
 }
 
 
@@ -68,5 +87,6 @@ function revertKey(keys) {
 
 module.exports = {
   minilistSs,
+  auth,
   test
 }

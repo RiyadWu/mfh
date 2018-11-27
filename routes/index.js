@@ -4,9 +4,12 @@
 
 const mfh = require('../controllers/mfh')
 const minilistSs = mfh.minilistSs
+const auth = mfh.auth
 const test = mfh.test
+
 
 module.exports = {
   minilistSs,
-  test
+  auth,
+  test,
 }

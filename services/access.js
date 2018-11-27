@@ -2,18 +2,6 @@ const request = require('request')
 const APIS = require('../config/http.config')
 const cookieUtil = require('../utils/cookie')
 
-function cookieChecker(payload, callback) {
-  const { err, httpResponse, body } = payload
-  const headers = httpResponse.headers
-  if (headers && headers['set-cookie']) {
-    const newCookie = headers['set-cookie']
-    cookieUtil.setCookie(newCookie)
-    return () => {
-      callback(err, httpResponse, body)
-    }
-  }
-}
-
 function login(callback) {
   const option = {
     url: APIS.LOGIN,
@@ -27,8 +15,8 @@ function login(callback) {
     }
   }
 
-  request.post(option, function (err, httpResponse, body) {
-    cookieChecker({ err, httpResponse, body }, callback)
+  request.post(option, function (err, res, body) {
+    callback(err, res, body)
   })
 }
 
